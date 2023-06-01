@@ -1,0 +1,285 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# **DATA ANALYTICS-I**
+# ## 1. Problem Statement
+# Perform the following operations on any open source dataset (e.g., data.csv)
+# 1. Create a Linear Regression Model using Python/R to predict home prices using Boston Housing
+# Dataset (https://www.kaggle.com/c/boston-housing). The Boston Housing dataset contains
+# information about various houses in Boston through different parameters. There are 506 samples
+# and 14 feature variables in this dataset. 
+
+# **Import libraries and create alias for Pandas, Numpy and Matplotlib**
+
+# In[ ]:
+
+
+import pandas as pd
+import numpy as np
+
+
+# **Import the Boston Housing dataset**
+
+# In[ ]:
+
+
+from google.colab import files
+files.upload()
+
+
+# ## 2. Data Collection
+# ### Loading the data
+
+# In[ ]:
+
+
+df=pd.read_csv("/content/boston_housing.csv")
+
+
+# In[ ]:
+
+
+df
+
+
+# ## 3. Exploratory Data Analysis
+# **Data Preprocessing:**
+
+# In[ ]:
+
+
+df.head()
+
+
+# In[ ]:
+
+
+df.info()
+
+
+# In[ ]:
+
+
+df.describe()
+
+
+# **Data Preprocessing**
+
+# In[ ]:
+
+
+df.isna()
+
+
+# In[ ]:
+
+
+df.isna().sum()
+
+
+# **Checking for Outliers**
+
+# ## 4. Feature Engineering
+# **Outlier Detection and Removal:**
+
+# In[ ]:
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+# In[ ]:
+
+
+df.boxplot()
+
+
+# In[ ]:
+
+
+Q1 = df['medv'].quantile(0.25)
+Q3 = df['medv'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5 * IQR
+Upper_limit = Q3 + 1.5 * IQR
+print(f'Q1 = {Q1}, Q3 = {Q3}, IQR = {IQR}, Lower_limit = {Lower_limit}, Upper_limit = {Upper_limit}')
+
+
+# In[ ]:
+
+
+outliers_medv=[]
+for i in df.medv:
+    if i<Lower_limit or i>Upper_limit:
+       outliers_medv.append(i)
+print("outliers are",outliers_medv)
+
+
+# In[ ]:
+
+
+df[df.medv<Lower_limit].index
+
+
+# In[ ]:
+
+
+df1=df.drop(df[df.medv<Lower_limit].index & df[df.medv>Upper_limit].index) 
+
+
+# In[ ]:
+
+
+df1.boxplot()
+
+
+# In[ ]:
+
+
+outliers_medv=[]
+for i in df2.medv:
+    if i<Lower_limit or i>Upper_limit:
+       outliers_medv.append(i)
+print("outliers are",outliers_medv)
+
+
+# In[ ]:
+
+
+df2
+
+
+# **Outlier Removal**
+
+# In[ ]:
+
+
+X = df.drop(['medv'], axis = 1)
+Y = df['medv']
+
+
+# In[ ]:
+
+
+X
+
+
+# In[ ]:
+
+
+Y
+
+
+# 
+
+# ## 5. Model Building and Training
+
+# In[ ]:
+
+
+from sklearn.model_selection import train_test_split
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size =0.2,random_state = 0)
+
+
+# **Training and testing the model**
+
+# In[ ]:
+
+
+import sklearn
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression()
+
+
+# In[ ]:
+
+
+model=lm.fit(xtrain, ytrain)
+
+
+# In[ ]:
+
+
+model
+
+
+# **Predict the y_pred for all values of train_x and test_x**
+
+# In[ ]:
+
+
+ytrain_pred = lm.predict(xtrain)
+ytest_pred = lm.predict(xtest)
+ytrain_pred
+
+
+# In[ ]:
+
+
+ytrain
+
+
+# ## 6. Model Evaluation
+
+# In[ ]:
+
+
+mse = mean_squared_error(ytrain, ytrain_pred)
+
+print("The model performance for training set")
+print("--------------------------------------")
+print('MSE is {}'.format(mse))
+print("\n")
+
+# model evaluation for testing set
+#y_test_predict = lin_model.predict(X_test)
+mse = mean_squared_error(ytest, ytest_pred)
+
+
+print("The model performance for testing set")
+print("--------------------------------------")
+print('MSE is {}'.format(mse))
+print("\n\n\n")
+
+rmse = (np.sqrt(mean_squared_error(ytrain, ytrain_pred)))
+r2 = r2_score(ytrain, ytrain_pred)
+
+print("The model performance for training set")
+print("--------------------------------------")
+print('RMSE is {}'.format(rmse))
+print('R2 score is {}'.format(r2))
+print("\n")
+
+# model evaluation for testing set
+#y_test_predict = lin_model.predict(X_test)
+rmse = (np.sqrt(mean_squared_error(ytest, ytest_pred)))
+r2 = r2_score(ytest, ytest_pred)
+
+print("The model performance for testing set")
+print("--------------------------------------")
+print('RMSE is {}'.format(rmse))
+print('R2 score is {}'.format(r2))
+
+
+# **Plotting the linear regression model**
+
+# In[ ]:
+
+
+plt.scatter(ytrain ,ytrain_pred,c='blue',marker='o',label='Training data')
+plt.scatter(ytest,ytest_pred ,c='lightgreen',marker='s',label='Test data')
+plt.xlabel('True values')
+plt.ylabel('Predicted')
+plt.title("True value vs Predicted value")
+plt.legend(loc= 'upper left')
+#plt.hlines(y=0,xmin=0,xmax=50)
+plt.plot()
+plt.show()
+
+
+# In[ ]:
+
+
+
+

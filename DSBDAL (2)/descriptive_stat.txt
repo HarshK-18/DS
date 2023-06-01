@@ -1,0 +1,406 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# **DESCRIPTIVE STATISTICS-I**
+# ## 1. Problem Statement
+# Perform the following operations on any open source dataset (e.g., data.csv)
+# 1. Provide summary statistics (mean, median, minimum, maximum, standard deviation) for
+# a dataset (age, income etc.) with numeric variables grouped by one of the qualitative
+# (categorical) variable. For example, if your categorical variable is age groups and
+# quantitative variable is income, then provide summary statistics of income grouped by the
+# age groups. Create a list that contains a numeric value for each response to the categorical
+# variable.
+# 2. Write a Python program to display some basic statistical details like percentile, mean,
+# standard deviation etc. of the species of ‘Iris-setosa’, ‘Iris-versicolor’ and ‘Iris-versicolor’
+# of iris.csv dataset.
+
+# **Basic Operations**
+
+# In[ ]:
+
+
+import pandas as pd
+import numpy as np
+
+
+# ## 2. Data Collection
+
+# In[ ]:
+
+
+df=pd.read_csv("/content/Iris.csv")
+
+
+# In[ ]:
+
+
+df
+
+
+# ## 3. Exploratory Data Analysis
+# **Data Preprocessing:**
+
+# In[ ]:
+
+
+df.head()
+
+
+# In[ ]:
+
+
+df.info()
+
+
+# In[ ]:
+
+
+df.describe()
+
+
+# ### Mean
+
+# In[ ]:
+
+
+df.mean()
+
+
+# In[ ]:
+
+
+df.loc[:,'SepalLengthCm'].mean()
+
+
+# In[ ]:
+
+
+df.mean(axis=1)[0:4]
+
+
+# ## Median
+
+# In[ ]:
+
+
+df.median()
+
+
+# In[ ]:
+
+
+df.loc[:,'SepalWidthCm'].median()
+
+
+# In[ ]:
+
+
+df.loc[:,'PetalLengthCm'].median()
+
+
+# In[ ]:
+
+
+df.median(axis=1)[0:4]
+
+
+# ## Mode
+
+# In[ ]:
+
+
+df.mode()
+
+
+# In[ ]:
+
+
+df.loc[:,'SepalWidthCm'].mode()
+
+
+# ## Min
+
+# In[ ]:
+
+
+df.min()
+
+
+# In[ ]:
+
+
+df.loc[:,'SepalWidthCm'].min(skipna = False)
+
+
+# ## Max
+
+# In[ ]:
+
+
+df.max()
+
+
+# ## std
+
+# In[ ]:
+
+
+df.std()
+
+
+# In[ ]:
+
+
+df.loc[:,'SepalWidthCm'].std()
+
+
+# In[ ]:
+
+
+df.std(axis=1)[0:4]
+
+
+# ## groupby
+
+# In[ ]:
+
+
+df.groupby(['SepalLengthCm'])['PetalLengthCm'].mean()
+
+
+# **To create a list that contains a numeric value for each response to the categorical variable.**
+
+# In[ ]:
+
+
+from sklearn import preprocessing
+enc = preprocessing.OneHotEncoder()
+enc_df = pd.DataFrame(enc.fit_transform(df[['PetalLengthCm']]).toarray())
+enc_df
+
+
+# **Load all rows with Iris-versicolor species in variable irisVer**
+
+# In[ ]:
+
+
+irisVer = (df['Species']== 'Iris-versicolor')
+
+
+# **To display basic statistical details like percentile, mean,standard deviation etc. forIris-
+# versicolor use describe**
+
+# In[ ]:
+
+
+print(df[irisVer].describe())
+
+
+# **Percentile**
+
+# In[ ]:
+
+
+ninetieth_percentile = np.percentile(df['SepalLengthCm'], 90)
+
+
+# In[ ]:
+
+
+ninetieth_percentile
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalWidthCm'], 90)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalLengthCm'], 90)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalWidthCm'], 90)
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalLengthCm'], 25)
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalLengthCm'], 75)
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalLengthCm'], 50)
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalWidthCm'], 75)
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalWidthCm'], 25)
+
+
+# In[ ]:
+
+
+np.percentile(df['SepalWidthCm'], 50)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalLengthCm'], 75)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalLengthCm'], 25)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalLengthCm'], 50)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalWidthCm'], 75)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalWidthCm'], 50)
+
+
+# In[ ]:
+
+
+np.percentile(df['PetalWidthCm'], 25)
+
+
+# **All obove on income dataset**
+
+# In[ ]:
+
+
+from google.colab import files
+files.upload()
+
+
+# In[ ]:
+
+
+df2 = pd.read_csv('/content/income.csv')
+
+
+# In[ ]:
+
+
+df2
+
+
+# In[ ]:
+
+
+df2.head()
+
+
+# In[ ]:
+
+
+df2.describe(include ="all")
+
+
+# In[ ]:
+
+
+df2.mean()
+
+
+# In[ ]:
+
+
+df2.mean()
+
+
+# In[ ]:
+
+
+df2.std()
+
+
+# In[ ]:
+
+
+df2.mean(axis=1)[0:4]
+
+
+# In[ ]:
+
+
+df2.min
+
+
+# In[ ]:
+
+
+df2.max
+
+
+# In[ ]:
+
+
+df2.quantile(0.25)
+
+
+# In[ ]:
+
+
+df2.quantile(0.50)
+
+
+# In[ ]:
+
+
+df2.quantile(0.75)
+
+
+# In[ ]:
+
+
+df2.groupby(['Gender'])['Age'].mean()
+
+
+# In[ ]:
+
+
+df2.groupby(['Gender'])['Income'].mean()
+
+
+# In[ ]:
+
+
+
+

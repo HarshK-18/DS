@@ -1,0 +1,156 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# **DATA ANALYTICS-II**
+# ## 1. Problem Statement
+# 1. Implement Simple Naïve Bayes classification algorithm using Python/R on iris.csv
+# dataset.
+# 2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision,
+# Recall on the given dataset.
+
+# **Import libraries and create alias for Pandas, Numpy**
+
+# In[12]:
+
+
+import pandas as pd
+import numpy as np
+
+
+# ## 2. Data Collection
+# ### Loading the data
+
+# In[19]:
+
+
+df = pd.read_csv("Iris.csv")    
+
+
+# ## 3. Exploratory Data Analysis
+# **Data Preprocessing:**
+
+# In[20]:
+
+
+df.head()
+
+
+# In[21]:
+
+
+df.describe()
+
+
+# **Check for Null Values**
+
+# In[22]:
+
+
+df.isnull().sum()
+
+
+# In[23]:
+
+
+df.info()
+
+
+# ## 5. Model Building and Training
+# 
+
+# In[24]:
+
+
+X = df.drop(['Species'], axis = 1)
+Y = df['Species']
+
+
+# In[25]:
+
+
+from sklearn.model_selection import train_test_split
+xtrain, xtest, ytrain, ytest = train_test_split(X, Y, test_size =0.2,random_state = 0)
+
+
+# In[26]:
+
+
+from sklearn.naive_bayes import GaussianNB
+gaussian = GaussianNB()
+
+
+# In[27]:
+
+
+gaussian.fit(xtrain, ytrain)
+
+
+# **Predict the y_pred for all values of train_x and test_x**
+
+# In[28]:
+
+
+y_pred = gaussian.predict(xtest)
+
+
+# In[29]:
+
+
+print(xtrain)
+print("------------\n")
+print(xtest)
+print("------------\n")
+print(ytrain)
+print("------------\n")
+print(ytest)
+print("------------\n")
+print(y_pred)
+
+
+# ## 6. Model Evaluation
+
+# In[30]:
+
+
+from sklearn.metrics import precision_score,confusion_matrix,accuracy_score,recall_score, classification_report
+cm= confusion_matrix(ytest, y_pred)
+
+
+# **Confusion Matrix**
+
+# In[31]:
+
+
+cm= confusion_matrix(ytest, y_pred)
+cm
+
+
+# **Accuracy Score**
+
+# In[32]:
+
+
+print ("Accuracy : ", accuracy_score(ytest, y_pred))
+
+
+# **Error Rate**
+
+# In[33]:
+
+
+error_rate = 1- accuracy_score(ytest, y_pred)
+
+
+# In[34]:
+
+
+error_rate
+
+
+# **Classification**
+
+# In[35]:
+
+
+print("classification report: ",classification_report(ytest, y_pred))
+

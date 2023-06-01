@@ -1,0 +1,570 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# **DATA WRANGLING-II**
+# ## 1. Problem Statement
+# Create an “Academic performance” dataset of students and perform the following operations using
+# Python.
+# 1. Scan all variables for missing values and inconsistencies. If there are missing values and/or
+# inconsistencies, use any of the suitable techniques to deal with them.
+# 2. Scan all numeric variables for outliers. If there are outliers, use any of the suitable
+# techniques to deal with them.
+# 3. Apply data transformations on at least one of the variables. The purpose of this
+# transformation should be one of the following reasons: to change the scale for better
+# understanding of the variable, to convert a non-linear relation into a linear one, or to
+# decrease the skewness and convert the distribution into a normal distribution.
+
+# **Loading the libraries**
+
+# In[ ]:
+
+
+import pandas as pd
+import numpy as np
+
+
+# **Upload Dataset**
+
+# ## 2. Data Collection
+# ### Loading the data
+
+# In[ ]:
+
+
+df=pd.read_excel("/content/Academic_perf.xlsx")
+
+
+# In[ ]:
+
+
+df
+
+
+# ## 3. Exploratory Data Analysis
+# **Data Preprocessing:**
+
+# In[ ]:
+
+
+df.head()
+
+
+# In[ ]:
+
+
+df.info()
+
+
+# In[ ]:
+
+
+df.describe(include="all")
+
+
+# In[ ]:
+
+
+df.shape
+
+
+# In[ ]:
+
+
+df.dtypes
+
+
+# In[ ]:
+
+
+df.columns
+
+
+# In[ ]:
+
+
+df[15:22]
+
+
+# In[ ]:
+
+
+df.loc[0:6]
+
+
+# In[ ]:
+
+
+df.loc[0:6,'DSBDA':'CC']
+
+
+# In[ ]:
+
+
+df.iloc[1:3]
+
+
+# In[ ]:
+
+
+df.iloc[1:5,1:5]
+
+
+# **Identification and Handling of Null Values**
+
+# In[ ]:
+
+
+df.isnull()
+
+
+# In[ ]:
+
+
+df.isna()
+
+
+# In[ ]:
+
+
+df.isnull().any()
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+df.isnull().sum()
+
+
+# In[ ]:
+
+
+df.DSBDA.isnull().sum()
+
+
+# In[ ]:
+
+
+df.WT.isnull().sum()
+
+
+# In[ ]:
+
+
+cols_with_na = []
+for col in df.columns:
+    if df[col].isna().any():
+       cols_with_na.append(col)
+cols_with_na
+
+
+# **Filling missing values using dropna(), fillna(), replace() :**
+
+# In[ ]:
+
+
+df.replace(np.nan,value=0)
+
+
+# In[ ]:
+
+
+df.fillna(1)
+
+
+# In[ ]:
+
+
+df['DSBDA']=df['DSBDA'].fillna(df['DSBDA'].mean())
+
+
+# In[ ]:
+
+
+df['WT']=df['WT'].fillna(df['WT'].mean())
+
+
+# In[ ]:
+
+
+df.head(16)
+
+
+# In[ ]:
+
+
+df.dropna()
+
+
+# In[ ]:
+
+
+df.dropna(how="all")
+
+
+# In[ ]:
+
+
+df.dropna(axis=1)
+
+
+# In[ ]:
+
+
+df.dropna(axis=0,how='any',inplace=True)
+
+
+# In[ ]:
+
+
+df
+
+
+# **Identification and Handling of Outliers**
+
+# In[ ]:
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+# In[ ]:
+
+
+df.boxplot()
+
+
+# In[ ]:
+
+
+sns.boxplot(x=df.WT)
+
+
+# In[ ]:
+
+
+sns.boxplot(x=df.TotalMarks)
+
+
+# In[ ]:
+
+
+sns.boxplot(x=df.Percentage)
+
+
+# In[ ]:
+
+
+import matplotlib.pyplot as plt
+plt.rcParams["figure.figsize"] = (9, 6)
+df_list = ['CC','WT','TotalMarks','Percentage']
+fig, axes = plt.subplots(2, 2)
+fig.set_dpi(120)
+
+count=0
+for r in range(2):
+   for c in range(2):
+       _ = df[df_list[count]].plot(kind = 'box', ax=axes[r,c])
+       count+=1
+
+
+# **Detecting outliers using Inter Quantile Range(IQR):**
+# 
+# 
+
+# In[ ]:
+
+
+Q1 = df['WT'].quantile(0.25)
+Q3 = df['WT'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5 * IQR
+Upper_limit = Q3 + 1.5 * IQR
+print(f'Q1 = {Q1}, Q3 = {Q3}, IQR = {IQR}, Lower_limit = {Lower_limit}, Upper_limit = {Upper_limit}')
+
+
+# In[ ]:
+
+
+Q1 = df['TotalMarks'].quantile(0.25)
+Q3 = df['TotalMarks'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5 * IQR
+Upper_limit = Q3 + 1.5 * IQR
+print(f'Q1 = {Q1}, Q3 = {Q3}, IQR = {IQR}, Lower_limit = {Lower_limit}, Upper_limit = {Upper_limit}')
+
+
+# In[ ]:
+
+
+Q1 = df['Percentage'].quantile(0.25)
+Q3 = df['Percentage'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5 * IQR
+Upper_limit = Q3 + 1.5 * IQR
+print(f'Q1 = {Q1}, Q3 = {Q3}, IQR = {IQR}, Lower_limit = {Lower_limit}, Upper_limit = {Upper_limit}')
+
+
+# In[ ]:
+
+
+df[(df['WT'] < Lower_limit) | (df['WT'] > Upper_limit)]
+
+
+# In[ ]:
+
+
+df[(df['TotalMarks'] < Lower_limit) | (df['TotalMarks'] > Upper_limit)]
+
+
+# In[ ]:
+
+
+df[(df['Percentage'] < Lower_limit) | (df['Percentage'] > Upper_limit)]
+
+
+# **Handling of Outliers**
+# 
+#   **Removing the outlier:**
+
+# In[ ]:
+
+
+outliers_WT=[]
+for i in df.WT:
+    if i<Lower_limit or i>Upper_limit:
+       outliers_WT.append(i)
+print("outliers are",outliers_WT)
+
+
+# In[ ]:
+
+
+outliers_TotM=[]
+for i in df.TotalMarks:
+    if i<Lower_limit or i>Upper_limit:
+       outliers_TotM.append(i)
+print("outliers are",outliers_TotM)
+
+
+# In[ ]:
+
+
+outliers_Perc=[]
+for i in df.Percentage:
+    if i<Lower_limit or i>Upper_limit:
+       outliers_Perc.append(i)
+print("outliers are",outliers_Perc)
+
+
+# In[ ]:
+
+
+df[df.WT<Lower_limit].index
+
+
+# In[ ]:
+
+
+df[df.TotalMarks<Lower_limit].index
+
+
+# In[ ]:
+
+
+df[df.Percentage<Lower_limit].index
+
+
+# In[ ]:
+
+
+df1=df.drop(df[df.WT<Lower_limit].index) 
+
+
+# In[ ]:
+
+
+df1=df.drop(df[df.Percentage<Lower_limit].index) 
+
+
+# In[ ]:
+
+
+df1=df.drop(df[df.TotalMarks<Lower_limit].index) 
+
+
+# In[ ]:
+
+
+df1.shape
+
+
+# In[ ]:
+
+
+df2=df[df.WT<Lower_limit]
+df2
+
+
+# In[ ]:
+
+
+df2=df[df.TotalMarks<Lower_limit]
+df2
+
+
+# In[ ]:
+
+
+df2=df[df.Percentage<Lower_limit]
+df2
+
+
+# **Mean/Median imputation**
+
+# In[ ]:
+
+
+sns.kdeplot(df.WT)
+
+
+# In[ ]:
+
+
+sns.kdeplot(df1.WT)
+
+
+# In[ ]:
+
+
+sns.kdeplot(df.TotalMarks)
+
+
+# In[ ]:
+
+
+sns.kdeplot(df1.TotalMarks)
+
+
+# In[ ]:
+
+
+sns.kdeplot(df.Percentage)
+
+
+# In[ ]:
+
+
+sns.kdeplot(df1.Percentage)
+
+
+# In[ ]:
+
+
+df.WT
+
+
+# In[ ]:
+
+
+df.TotalMarks
+
+
+# In[ ]:
+
+
+df.Percentage
+
+
+# In[ ]:
+
+
+log_wt=np.log(df.WT)
+log_wt
+
+
+# In[ ]:
+
+
+sns.kdeplot(log_wt)
+
+
+# In[ ]:
+
+
+log_perc=np.log(df.Percentage)
+log_perc
+
+
+# In[ ]:
+
+
+sns.kdeplot(log_perc)
+
+
+# In[ ]:
+
+
+log_tm=np.log(df.TotalMarks)
+log_tm
+
+
+# In[ ]:
+
+
+sns.kdeplot(log_tm)
+
+
+# **DATA TRANSFORMATION**
+# 
+# **Checking the distribution with Skewness**
+
+# In[ ]:
+
+
+import seaborn as sns
+
+
+# In[ ]:
+
+
+df.skew()
+
+
+# **Checking the distribution of variables using KDE plot**
+
+# In[ ]:
+
+
+sns.kdeplot(df.DSBDA);
+
+
+# In[ ]:
+
+
+sns.kdeplot(df.CC);
+
+
+# In[ ]:
+
+
+sns.kdeplot(df.WT);
+
+
+# In[ ]:
+
+
+sns.kdeplot(df.TotalMarks);
+
+
+# In[ ]:
+
+
+sns.kdeplot(df.Percentage);
+

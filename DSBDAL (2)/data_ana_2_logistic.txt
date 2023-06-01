@@ -1,0 +1,247 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# **DATA ANALYTICS-II**
+# ## 1. Problem Statement
+# 1. Implement logistic regression using Python/R to perform classification on
+# Social_Network_Ads.csv dataset.
+# 2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+# on the given dataset.
+
+# **Import libraries and create alias for Pandas, Numpy**
+
+# In[13]:
+
+
+import pandas as pd
+import numpy as np
+
+
+# ## 2. Data Collection
+# ### Loading the data
+
+# In[14]:
+
+
+df=pd.read_csv("datasets\Social_Network_Ads.csv")
+
+
+# ## 3. Exploratory Data Analysis
+# **Data Preprocessing:**
+
+# In[15]:
+
+
+df.head()
+
+
+# In[16]:
+
+
+df.describe()
+
+
+# In[17]:
+
+
+df.isnull().sum()
+
+
+# In[18]:
+
+
+df.info()
+
+
+# ## 4. Feature Engineering
+# **Outlier Detection and Removal:**
+
+# In[19]:
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+# In[20]:
+
+
+df.boxplot()
+
+
+# In[27]:
+
+
+male = pd.get_dummies(df.Gender)
+male
+
+
+# In[28]:
+
+
+male.drop("Female", inplace=True, axis=1)
+
+
+# In[29]:
+
+
+df_new = pd.concat([df, male], axis=1)
+df_new
+
+
+# In[30]:
+
+
+df_new.drop("Gender", inplace=True, axis=1)
+
+
+# In[31]:
+
+
+df_new
+
+
+# In[32]:
+
+
+X = df_new.drop(['Purchased'], axis = 1)
+Y = df_new['Purchased']
+
+
+# ## 5. Model Building and Training
+# 
+
+# In[33]:
+
+
+from sklearn.model_selection import train_test_split
+xtrain, xtest, ytrain, ytest = train_test_split(X, Y, test_size =0.2,random_state = 0)
+
+
+# In[34]:
+
+
+from sklearn.linear_model import LogisticRegression
+
+
+# In[35]:
+
+
+logreg = LogisticRegression()
+
+
+# In[36]:
+
+
+logreg.fit(xtrain,ytrain)
+
+
+#  **Predict the y_pred for all values of and test_x**
+
+# In[37]:
+
+
+y_pred=logreg.predict(xtest)
+
+
+# In[38]:
+
+
+print(xtrain)
+print("------------\n")
+print(xtest)
+print("------------\n")
+print(ytrain)
+print("------------\n")
+print(ytest)
+print("------------\n")
+print(y_pred)
+
+
+# ## 6. Model Evaluation
+# **Find the Following Parameters for Logistic Regression on** **Social_Networking_Ads dataset:**
+# **1. Classification Report**
+# **2. Accuracy Score**
+# **3. Confusion Matrix**
+# **4. Error Rate**
+# **5. Precision**
+# **6. Recall**
+
+# In[39]:
+
+
+from sklearn.metrics import precision_score,confusion_matrix,accuracy_score,recall_score, classification_report
+
+
+# **Confusion Matrix**
+
+# In[40]:
+
+
+cm= confusion_matrix(ytest, y_pred)
+cm
+
+
+# **accuracy_score**
+
+# In[41]:
+
+
+print ("Accuracy : ", accuracy_score(ytest, y_pred))
+
+
+#  **Precision**
+
+# In[42]:
+
+
+ps = precision_score(ytest, y_pred)
+
+
+# In[43]:
+
+
+ps
+
+
+# **Recall score**
+
+# In[44]:
+
+
+rs = recall_score(ytest, y_pred)
+
+
+# In[45]:
+
+
+rs
+
+
+# *Error Rate**
+
+# In[46]:
+
+
+error_rate = 1- accuracy_score(ytest, y_pred)
+
+
+# In[47]:
+
+
+error_rate
+
+
+# **Classification Report**
+
+# In[48]:
+
+
+print("classification report: ",classification_report(ytest, y_pred))
+
+
+# In[ ]:
+
+
+
+

@@ -1,0 +1,178 @@
+
+
+    import nltk
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    nltk.download('wordnet')
+    nltk.download('averaged_perceptron_tagger')
+
+    [nltk_data] Downloading package punkt to
+    [nltk_data]     C:\Users\jgdod\AppData\Roaming\nltk_data...
+    [nltk_data]   Package punkt is already up-to-date!
+    [nltk_data] Downloading package stopwords to
+    [nltk_data]     C:\Users\jgdod\AppData\Roaming\nltk_data...
+    [nltk_data]   Package stopwords is already up-to-date!
+    [nltk_data] Downloading package wordnet to
+    [nltk_data]     C:\Users\jgdod\AppData\Roaming\nltk_data...
+    [nltk_data]   Package wordnet is already up-to-date!
+    [nltk_data] Downloading package averaged_perceptron_tagger to
+    [nltk_data]     C:\Users\jgdod\AppData\Roaming\nltk_data...
+    [nltk_data]   Package averaged_perceptron_tagger is already up-to-
+    [nltk_data]       date!
+
+    True
+
+    text= "Tokenization is the first step in text analytics. The process of breaking down a text paragraph into smaller chunks such as words or sentences is called Tokenization."
+
+    from nltk.tokenize import sent_tokenize
+    tokenized_text= sent_tokenize(text)
+    print(tokenized_text)
+
+    ['Tokenization is the first step in text analytics.', 'The process of breaking down a text paragraph into smaller chunks such as words or sentences is called Tokenization.']
+
+    from nltk.tokenize import word_tokenize
+    tokenized_word=word_tokenize(text)
+    print(tokenized_word)
+
+    ['Tokenization', 'is', 'the', 'first', 'step', 'in', 'text', 'analytics', '.', 'The', 'process', 'of', 'breaking', 'down', 'a', 'text', 'paragraph', 'into', 'smaller', 'chunks', 'such', 'as', 'words', 'or', 'sentences', 'is', 'called', 'Tokenization', '.']
+
+    import re
+    from nltk.corpus import stopwords
+    stop_words=set(stopwords.words("english"))
+    print(stop_words)
+    text= "How to remove stop words with NLTK library in Python?"
+    text= re.sub('[^a-zA-Z]', ' ',text)
+    tokens = word_tokenize(text.lower())
+    filtered_text=[]
+    for w in tokens:
+      if w not in stop_words:
+        filtered_text.append(w)
+    print("Tokenized Sentence:",tokens)
+    print("Filterd Sentence:",filtered_text)
+
+    {'above', 'themselves', 'but', 'isn', 'an', 'which', 'by', "isn't", 'doesn', 'both', 'o', 'so', 've', 'while', "she's", 'who', 'my', 't', 'yourself', "needn't", 'that', 'same', 'through', 'into', "you're", "hadn't", 'him', 'about', 'because', 'had', 'me', 'below', "you'd", 'mightn', 'ain', 'll', 'and', 'will', 'now', 'further', 'in', "won't", 'd', 'wasn', 'before', "shan't", 'a', 'until', 'theirs', 're', 'hadn', 'himself', 'couldn', 'is', 'having', 'do', 'been', 'own', 'hasn', 'their', 'don', 'ours', 'all', 'to', 'has', "should've", "mustn't", 'other', 'yours', 'it', 'i', 'can', 'hers', 'not', "shouldn't", 'for', 'here', 'your', 'against', 'these', 'few', "haven't", 'what', 'won', 'the', 'should', 'only', 'from', "mightn't", 'm', 'ourselves', 'out', 'under', 'as', 'when', "wouldn't", 'then', 'them', 'how', "you'll", 'are', 'being', 'they', 's', 'any', 'why', 'or', 'weren', 'there', "wasn't", 'if', 'during', 'some', "don't", 'between', 'just', "couldn't", 'itself', 'nor', 'her', "doesn't", 'again', 'y', 'such', 'very', "weren't", 'at', 'this', 'his', 'our', 'up', 'too', 'did', 'with', 'over', "aren't", 'we', "you've", 'off', "it's", 'you', 'yourselves', 'its', "hasn't", "that'll", 'needn', 'wouldn', 'of', 'more', 'down', 'once', 'ma', 'most', 'those', 'didn', 'does', 'doing', 'were', 'be', "didn't", 'aren', 'mustn', 'than', 'shouldn', 'herself', 'where', 'each', 'have', 'no', 'haven', 'am', 'myself', 'was', 'she', 'shan', 'on', 'after', 'he', 'whom'}
+    Tokenized Sentence: ['how', 'to', 'remove', 'stop', 'words', 'with', 'nltk', 'library', 'in', 'python']
+    Filterd Sentence: ['remove', 'stop', 'words', 'nltk', 'library', 'python']
+
+    from nltk.stem import PorterStemmer
+    e_words= ["wait", "waiting", "waited", "waits"]
+    ps =PorterStemmer()
+    for w in e_words:
+      rootWord=ps.stem(w)
+    print(rootWord)
+
+    wait
+
+    from nltk.stem import WordNetLemmatizer
+    wordnet_lemmatizer = WordNetLemmatizer()
+    text = "studies studying cries cry"
+    tokenization = nltk.word_tokenize(text)
+    for w in tokenization:
+      print("Lemma for {} is {}".format(w,wordnet_lemmatizer.lemmatize(w)))
+
+    Lemma for studies is study
+    Lemma for studying is studying
+    Lemma for cries is cry
+    Lemma for cry is cry
+
+    from nltk.tokenize import word_tokenize
+    data="The pink sweater fit her perfectly"
+    words=word_tokenize(data)
+    for word in words:
+      print(nltk.pos_tag([word]))
+
+    [('The', 'DT')]
+    [('pink', 'NN')]
+    [('sweater', 'NN')]
+    [('fit', 'NN')]
+    [('her', 'PRP$')]
+    [('perfectly', 'RB')]
+
+Algorithm for Create representation of document by calculating TFIDF
+
+Import the necessary libraries.
+
+    import pandas as pd
+    from sklearn.feature_extraction.text import TfidfVectorizer
+
+Initialize the Documents.
+
+    documentA = 'Jupiter is the largest Planet'
+    documentB = 'Mars is the fourth planet from the Sun'
+
+Create BagofWords (BoW) for Document A and B.
+
+    bagOfWordsA = documentA.split(' ')
+    bagOfWordsB = documentB.split(' ')
+
+Create Collection of Unique words from Document A and B.
+
+    uniqueWords = set(bagOfWordsA).union(set(bagOfWordsB))
+
+Create a dictionary of words and their occurrence for each document in
+the corpus
+
+    numOfWordsA = dict.fromkeys(uniqueWords, 0)
+    for word in bagOfWordsA:
+      numOfWordsA[word] += 1
+    numOfWordsB = dict.fromkeys(uniqueWords, 0)
+    for word in bagOfWordsB:
+      numOfWordsB[word] += 1
+
+Compute the term frequency for each of our documents.
+
+    def computeTF(wordDict, bagOfWords):
+      tfDict = {}
+      bagOfWordsCount = len(bagOfWords)
+      for word, count in wordDict.items():
+        tfDict[word] = count / float(bagOfWordsCount)
+      return tfDict
+    tfA = computeTF(numOfWordsA, bagOfWordsA)
+    tfB = computeTF(numOfWordsB, bagOfWordsB)
+
+Compute the term Inverse Document Frequency.
+
+    def computeIDF(documents):
+      import math
+      N = len(documents)
+      idfDict = dict.fromkeys(documents[0].keys(), 0)
+      for document in documents:
+        for word, val in document.items():
+          if val > 0:
+            idfDict[word] += 1
+      for word, val in idfDict.items():
+        idfDict[word] = math.log(N / float(val))
+      return idfDict
+    idfs = computeIDF([numOfWordsA, numOfWordsB])
+    idfs
+
+    {'fourth': 0.6931471805599453,
+     'Sun': 0.6931471805599453,
+     'Planet': 0.6931471805599453,
+     'Jupiter': 0.6931471805599453,
+     'planet': 0.6931471805599453,
+     'Mars': 0.6931471805599453,
+     'largest': 0.6931471805599453,
+     'the': 0.0,
+     'from': 0.6931471805599453,
+     'is': 0.0}
+
+Compute the term TF/IDF for all words.
+
+    def computeTFIDF(tfBagOfWords, idfs):
+      tfidf = {}
+      for word, val in tfBagOfWords.items():
+        tfidf[word] = val * idfs[word]
+      return tfidf
+    tfidfA = computeTFIDF(tfA, idfs)
+    tfidfB = computeTFIDF(tfB, idfs)
+    df = pd.DataFrame([tfidfA, tfidfB])
+    df
+
+         fourth       Sun    Planet   Jupiter    planet      Mars   largest  the  \
+    0  0.000000  0.000000  0.138629  0.138629  0.000000  0.000000  0.138629  0.0   
+    1  0.086643  0.086643  0.000000  0.000000  0.086643  0.086643  0.000000  0.0   
+
+           from   is  
+    0  0.000000  0.0  
+    1  0.086643  0.0  
